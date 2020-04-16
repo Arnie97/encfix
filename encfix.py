@@ -22,6 +22,7 @@
 
 import argparse
 import chardet
+import itertools
 import os
 import re
 import unicodedata
@@ -59,7 +60,18 @@ def recover_raw_data(s: str) -> bytes:
 
 def fix_encoding(s: str) -> str:
     raw = recover_raw_data(s)
-    return raw.decode(chardet.detect(raw)['encoding'])
+    detected_charset = chardet.detect(raw)['encoding']
+    detected_charset = [detected_charset] if detected_charset else []
+
+    for charset in itertools.chain(detected_charset, reversed(CHARSETS)):
+        try:
+            fixed = raw.decode(charset)
+            assert s != fixed
+        except (UnicodeDecodeError, LookupError, AssertionError):
+            pass
+        else:
+            return fixed
+    return s
 
 
 def main() -> None:
