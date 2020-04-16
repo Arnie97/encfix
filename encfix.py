@@ -23,6 +23,7 @@
 import argparse
 import chardet
 import os
+import re
 import unicodedata
 import urllib.parse
 
@@ -43,7 +44,7 @@ CHARSETS = [
 
 
 def recover_raw_data(s: str) -> bytes:
-    if '%' in s:
+    if re.search('%[0-9A-F]{2}', s, re.IGNORECASE):
         return urllib.parse.unquote_to_bytes(s)
 
     s = unicodedata.normalize('NFC', s)
