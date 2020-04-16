@@ -1,4 +1,9 @@
+from os import path
 from setuptools import setup
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='encfix',
@@ -14,6 +19,8 @@ setup(
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
     zip_safe=True,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
